@@ -1,28 +1,35 @@
 import { mutation } from "./_generated/server";
+import bcrypt from "bcryptjs";
 
-export const seed = mutation({
-  args: {},
+export default mutation({
   handler: async (ctx) => {
-    const initialTasks = [
-      "Buy groceries",
-      "Finish React Native tutorial",
-      "Clean the kitchen",
-      "Call mom",
-      "Schedule dentist appointment",
-      "Fix bug in todo app",
-      "Read 10 pages of a book",
-      "Go for a 20-minute run",
-      "Organize desk",
-      "Meditate for 5 minutes"
+    // 1. Hash the password to match your login logic in users.ts
+    // Use hashSync to keep the seeder simple or await bcrypt.hash
+    const hashedPassword = bcrypt.hashSync("password123", 10);
+
+    // 2. Create the User first to get the ID
+    const userId = await ctx.db.insert("users", {
+      username: "exam_user",
+      password: hashedPassword,
+    });
+
+    // 3. Define tasks to be seeded
+    const tasks = [
+      "Install all dependencies",
+      "Configure environment variables",
+      "Update relational seeder",
+      "Finish the Practical Exam"
     ];
 
-    for (const taskText of initialTasks) {
+    // 4. Insert tasks with the required userId link
+    for (const taskText of tasks) {
       await ctx.db.insert("todos", {
         text: taskText,
-        isCompleted: Math.random() > 0.7, // Randomly mark some as completed
+        isCompleted: false,
+        userId: userId, // This fixes the TS2345 error
       });
     }
-    
-    return "Successfully seeded 10 tasks!";
+
+    console.log("Success: Seeded 1 user and 4 linked todos.");
   },
 });
