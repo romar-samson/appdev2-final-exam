@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
     StyleSheet,
     Text,
@@ -19,6 +20,7 @@ interface LoginProps {
 }
 
 const LoginScreen = ({ onLogin } : LoginProps) => {
+    const navigation = useNavigation<any>();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -111,7 +113,7 @@ const LoginScreen = ({ onLogin } : LoginProps) => {
 
                 <View style={styles.footer}>
                     <Text>Don't have an account? </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
                         <Text style={styles.linkText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -12,11 +13,8 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
-interface SignupScreenProps {
-  onNavigateToLogin: () => void;
-}
-
-export default function SignupScreen({ onNavigateToLogin }: SignupScreenProps) {
+export default function SignupScreen() {
+  const navigation = useNavigation<any>();
   // State for form inputs
   const [fullname, setFullname] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -44,7 +42,7 @@ export default function SignupScreen({ onNavigateToLogin }: SignupScreenProps) {
         Alert.alert("Registration Failed", result.message);
       } else {
         Alert.alert("Success", "Account created successfully!");
-        onNavigateToLogin();
+        navigation.navigate("Login");
       }
     } catch (error) {
       Alert.alert("Error", "An unexpected error occurred during signup.");
@@ -110,7 +108,7 @@ export default function SignupScreen({ onNavigateToLogin }: SignupScreenProps) {
 
         <View style={styles.footer}>
           <Text>Already have an account? </Text>
-          <TouchableOpacity onPress={onNavigateToLogin}>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.linkText}>Log In</Text>
           </TouchableOpacity>
         </View>
